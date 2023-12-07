@@ -6,7 +6,7 @@ import usersModel from "../Models/usersModel.js";
 // getting a particular user from the database by the given id
 export const getUser = async (req, res) => {
   try {
-    const query = await usersModel.findById(req.params.id);
+    const query = await usersModel.findOne(req.params.u_id);
     if (query) {
       res.status(200).json(query);
     } else {
@@ -38,7 +38,8 @@ export const getAllUsers = async (req, res) => {
 // Adding a new user in the database
 export const postUser = async (req, res) => {
   const newUser = new usersModel({
-    id: req.body.id,
+    _id : req.body._id,
+    u_id: req.body.u_id,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     email: req.body.email,
@@ -58,8 +59,8 @@ export const postUser = async (req, res) => {
 // updating details for the user in the database with the id
 export const updateUser = async (req, res) => {
   try {
-    const query = await usersModel.findByIdAndUpdate(
-      req.params.id,
+    const query = await usersModel.findOneAndUpdate(
+      req.params.u_id,
       {
         $set: req.body,
       },
@@ -80,7 +81,9 @@ export const updateUser = async (req, res) => {
 // deleting user from the database with the given id
 export const deleteUser = async (req, res) => {
   try {
-    const query = await usersModel.findByIdAndDelete(req.params.id);
+    const query = await usersModel.findOneAndDelete(
+      req.params.u_id
+    );
     if (!query) {
       res.status(400).json({ msg: "No user exists with this id !!" });
     } else {

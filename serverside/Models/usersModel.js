@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema({
       return new ObjectId().toString();
     },
   },
+  u_id : {
+    type : Number,
+    required : true,
+  },
   first_name: {
     type: String,
     required: true,
