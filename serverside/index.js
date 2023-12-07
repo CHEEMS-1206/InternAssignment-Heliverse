@@ -5,6 +5,7 @@ import cors from "cors";
 
 // importing all routers
 import homeRouter from "./routes/home.js";
+import usersRouter from "./Routes/users.js"
 
 // importing database config code and rendering for config folder
 import "./config/config.js";
@@ -20,6 +21,7 @@ SERVER.use(express.json());
 
 //MIDDLEWARES
 SERVER.use("/", homeRouter);
+SERVER.use("/api/users", usersRouter);
 
 // defining port for backend rest server
 const PORT = 5001;
