@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 
 // importing all routers
-
+import homeRouter from "./routes/home.js";
 
 // importing database config code and rendering for config folder
 import "./config/config.js";
@@ -19,6 +19,7 @@ SERVER.use(express.urlencoded({ extended: true }));
 SERVER.use(express.json());
 
 //MIDDLEWARES
+SERVER.use("/", homeRouter);
 
 // defining port for backend rest server
 const PORT = 5001;
