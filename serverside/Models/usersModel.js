@@ -8,9 +8,10 @@ const userSchema = new mongoose.Schema({
       return new ObjectId().toString();
     },
   },
-  u_id : {
-    type : Number,
-    required : true,
+  u_id: {
+    unique: true,
+    type: Number,
+    required: true,
   },
   first_name: {
     type: String,
@@ -29,7 +30,7 @@ const userSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Gender Fluid"],
+    enum: ["Male", "Female", "Agender", "Bigender", "Polygender", "Genderfluid"],
   },
   avatar: {
     type: String,
@@ -48,7 +49,8 @@ const userSchema = new mongoose.Schema({
       "Marketing",
       "Management",
       "UI Designing",
-      "Web Development",
+      "IT",
+      "Business Development",
     ],
   },
   available: {

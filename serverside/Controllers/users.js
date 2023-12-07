@@ -6,7 +6,7 @@ import usersModel from "../Models/usersModel.js";
 // getting a particular user from the database by the given id
 export const getUser = async (req, res) => {
   try {
-    const query = await usersModel.findOne(req.params.u_id);
+    const query = await usersModel.findOne({u_id : req.params.id});
     if (query) {
       res.status(200).json(query);
     } else {
@@ -60,7 +60,7 @@ export const postUser = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     const query = await usersModel.findOneAndUpdate(
-      req.params.u_id,
+      { u_id: req.params.id },
       {
         $set: req.body,
       },
@@ -81,9 +81,7 @@ export const updateUser = async (req, res) => {
 // deleting user from the database with the given id
 export const deleteUser = async (req, res) => {
   try {
-    const query = await usersModel.findOneAndDelete(
-      req.params.u_id
-    );
+    const query = await usersModel.findOneAndDelete({ u_id: req.params.id });
     if (!query) {
       res.status(400).json({ msg: "No user exists with this id !!" });
     } else {
