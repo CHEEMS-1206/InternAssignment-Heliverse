@@ -30,7 +30,15 @@ const userSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Agender", "Bigender", "Polygender", "Genderfluid"],
+    enum: [
+      "Male",
+      "Female",
+      "Agender",
+      "Bigender",
+      "Polygender",
+      "Genderfluid",
+      "Non-binary",
+    ],
   },
   avatar: {
     type: String,

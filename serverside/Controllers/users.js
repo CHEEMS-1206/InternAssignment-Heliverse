@@ -19,19 +19,35 @@ export const getUser = async (req, res) => {
   }
 };
 
-// getting list of all users in the database
+// Getting list of all users in the database with pagination
 export const getAllUsers = async (req, res) => {
+  const { page = 1, limit = 25 } = req.query; // Default page is 1 and limit is 25, if not provided
+
   try {
-    const query = await usersModel.find();
-    if (query) {
-      res.status(200).json(query);
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
+
+    const totalUsers = await usersModel.countDocuments({});
+    const totalPages = Math.ceil(totalUsers / limitNumber);
+
+    const users = await usersModel
+      .find()
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber);
+
+    if (users.length > 0) {
+      res.status(200).json({
+        users,
+        currentPage: pageNumber,
+        totalPages
+      });
     } else {
-      res.status(400).json({
-        msg: "Oops No user available !",
+      res.status(404).json({
+        msg: "Oops! No users available."
       });
     }
   } catch (e) {
-    res.status(400).json({ msg: e });
+    res.status(400).json({ msg: e.message });
   }
 };
 
