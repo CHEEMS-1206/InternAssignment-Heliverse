@@ -3,7 +3,7 @@ import {
   Select,
   InputLabel,
   FormControl,
-  TextField
+  TextField,
 } from "@mui/material";
 
 import UserDetailsCard from "./UserDetailsCard";
@@ -14,6 +14,12 @@ function LandingPage() {
   const [myDetails, setMyDetails] = useState(null);
   const [allUsers, setAllUsers] = useState(null);
   const [page, setPage] = useState(1);
+
+  const [gender, setGender] = useState("All-Genders");
+  const [domain, setDomain] = useState("All-Domains");
+  const [available, setAvailable] = useState(true);
+
+  const [usernameTosearch, setUsernameTosearch] = useState("Alex");
 
   const u_id = localStorage.getItem("u_id");
   const navigate = useNavigate();
@@ -26,7 +32,7 @@ function LandingPage() {
         if (response.ok) {
           const listOfUsers = await response.json();
           setAllUsers(listOfUsers);
-          console.log(listOfUsers);
+          // console.log(listOfUsers);
         } else {
           // Handle error cases if needed
           console.error("Error fetching user details:", response.statusText);
@@ -45,7 +51,7 @@ function LandingPage() {
         if (response.ok) {
           const userData = await response.json();
           setMyDetails(userData);
-          console.log(userData);
+          // console.log(userData);
         } else {
           // Handle error cases if needed
           console.error("Error fetching user details:", response.statusText);
@@ -88,17 +94,72 @@ function LandingPage() {
     }
     console.log(page);
   };
-  const handleChange = () => {
-    console.log("change");
+
+  // checks for changes
+  const handleDomainChange = (e) => {
+    setDomain(e.target.value);
+    // console.log(e.target.value)
   };
-  const filterBy = () => {
-    console.log("change");
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+    // console.log(e.target.value);
+  };
+  const handleAvailabilityChange = (e) => {
+    setAvailable(e.target.value);
+    // console.log(e.target.value);
+  };
+  const handleUserNameChange = (e) => {
+    setUsernameTosearch(e.target.value);
+    // console.log(e.target.value);
   };
 
-  const gender = "Male";
-  const domain = "IT";
-  const available = true;
-  const username = "Alex"
+  // updates by filter and names search
+  const filterBy = async (e) => {
+    let inclusion = "";
+    if (gender === "All-Genders") {
+      inclusion += ``;
+    } else {
+      inclusion += `gender=${gender}&`;
+    }
+    if (domain === "All-Domains") {
+      inclusion += ``;
+    } else {
+      inclusion += `domain=${domain}&`;
+    }
+    if (!available) {
+      inclusion += ``;
+    } else {
+      inclusion += `available=${available}`;
+    }
+    const response = await fetch(
+      `http://localhost:5001/api/users/filter?${inclusion}`
+    );
+    if (response.ok) {
+      const userData = await response.json();
+      setAllUsers(userData);
+      console.log(userData);
+    } else {
+      // Handle error cases if needed
+      console.error("Error fetching user details:", response.statusText);
+    }
+  };
+
+  const searchByName = async (e) => {
+    const response = await fetch(
+      `http://localhost:5001/api/users/search-by-name?name=${usernameTosearch}`
+    );
+    if (response.ok) {
+      const userData = await response.json();
+      if (userData.length === 0) {
+      } else {
+        setAllUsers({users : userData});
+        console.log(userData);
+      }
+    } else {
+      // Handle error cases if needed
+      console.error("Error fetching user details:", response.statusText);
+    }
+  };
 
   return (
     <div className="landingPage">
@@ -114,8 +175,12 @@ function LandingPage() {
           <div className="filter">
             <FormControl style={{ width: "22%" }} margin="normal" required>
               <InputLabel>Gender</InputLabel>
-              <Select value={gender} name="gender" onChange={handleChange}>
-                <MenuItem value="">All Genders</MenuItem>
+              <Select
+                value={gender}
+                name="gender"
+                onChange={handleGenderChange}
+              >
+                <MenuItem value="All-Genders">All Genders</MenuItem>
                 <MenuItem value="Male">Male</MenuItem>
                 <MenuItem value="Female">Female</MenuItem>
                 <MenuItem value="Agender">Agender</MenuItem>
@@ -128,8 +193,12 @@ function LandingPage() {
             </FormControl>
             <FormControl style={{ width: "22%" }} margin="normal" required>
               <InputLabel>Domain</InputLabel>
-              <Select value={domain} name="domain" onChange={handleChange}>
-                <MenuItem value="">All Domains</MenuItem>
+              <Select
+                value={domain}
+                name="domain"
+                onChange={handleDomainChange}
+              >
+                <MenuItem value="All-Domains">All Domains</MenuItem>
                 <MenuItem value="Sales">Sales</MenuItem>
                 <MenuItem value="Finance">Finance</MenuItem>
                 <MenuItem value="Marketing">Marketing</MenuItem>
@@ -146,7 +215,7 @@ function LandingPage() {
               <Select
                 value={available}
                 name="available"
-                onChange={handleChange}
+                onChange={handleAvailabilityChange}
               >
                 <MenuItem value={true}>Yes</MenuItem>
                 <MenuItem value={false}>No</MenuItem>
@@ -160,12 +229,12 @@ function LandingPage() {
               label="Name"
               type="text"
               name="name"
-              value={username}
-              onChange={handleChange}
+              value={usernameTosearch}
+              onChange={handleUserNameChange}
               margin="normal"
               required
             />
-            <button onClick={filterBy}>Search By Name</button>
+            <button onClick={searchByName}>Search By Name</button>
           </div>
           <div className="all-users-container">
             {allUsers &&
