@@ -150,13 +150,11 @@ function LandingPage() {
     );
     if (response.ok) {
       const userData = await response.json();
-      if (userData.length === 0) {
-      } else {
-        setAllUsers({users : userData});
-        console.log(userData);
-      }
+      setAllUsers({ users: userData });
+      // console.log(userData);
     } else {
       // Handle error cases if needed
+      alert("No users found with this name.");
       console.error("Error fetching user details:", response.statusText);
     }
   };
