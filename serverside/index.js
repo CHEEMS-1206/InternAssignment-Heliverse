@@ -6,6 +6,7 @@ import cors from "cors";
 // importing all routers
 import homeRouter from "./routes/home.js";
 import usersRouter from "./Routes/users.js"
+import authRouter from "./Routes/Authentication.js";
 
 // importing database config code and rendering for config folder
 import "./config/config.js";
@@ -20,6 +21,7 @@ SERVER.use(express.urlencoded({ extended: true }));
 SERVER.use(express.json());
 
 //MIDDLEWARES
+SERVER.use("/api/",authRouter)
 SERVER.use("/", homeRouter);
 SERVER.use("/api/users", usersRouter);
 
