@@ -40,7 +40,7 @@ const LoginPage = () => {
         body: JSON.stringify(formData),
       });
 
-      if (response.status === 200) {
+      if (response.ok) {
         const { token } = await response.json();
         alert("Logged in successfully! Token:");
 
@@ -49,8 +49,14 @@ const LoginPage = () => {
         localStorage.setItem("email", formData.email);
         localStorage.setItem("u_id", formData.u_id);
 
-        // Redirect to a protected route or perform further actions
-        navigate("/add-details");
+        // check whether user has added details already
+        const dataAdded = await fetch(`http://localhost:5001/api/users/${u_id}`);
+        if (dataAdded.ok) {
+          navigate("/list-all-users");
+        } else {
+          // Redirect to a protected route or perform further actions
+          navigate("/add-details");
+        }
       } else {
         alert("Failed to log in.");
         // Handle other status codes or errors
